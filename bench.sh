@@ -4,9 +4,15 @@ nb_pass=$2
 echo $file $nb_pass
 
 pipe_all() {
-	local cmd="cat $file | "
+	local cmd="cat $file "
 
-	cmd+=`sed -n -e "s/ / | /pg" <<< $@`
+	if [[ ! -z "${@}" ]]
+	then
+		echo a $@ b
+		cmd+=" | "
+		cmd+=`sed -e "s/ / | /pg" <<< $@`
+	fi
+
 	cmd+=" > /dev/null"
 
 	echo $cmd
@@ -22,7 +28,7 @@ pass_unbuffered() {
 }
 
 pipeline_1=()
-for i in `seq ${nb_pass}`
+for i in `seq 0 ${nb_pass}`
 do
 	pipeline_1+=(pass)
 done
